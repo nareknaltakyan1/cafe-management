@@ -1,0 +1,34 @@
+#region security
+jwt:
+  expiration-time-pattern: 86400
+security:
+  token:
+    header: accessToken
+    secret: token
+    validity: 1800
+#endregion security
+
+spring:
+  application:
+    name: cafe-management
+  datasource:
+    url: jdbc:mysql://localhost:3306/cafe?useUnicode=yes&characterEncoding=UTF-8
+    username: root
+    password: root
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+
+
+cloud:
+  storage:
+    app-key: AKIAV3OXBPMUKMY6RSVG
+    secret: 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
+    bucket-name: educationalfoundation
+    region: eu-west-2

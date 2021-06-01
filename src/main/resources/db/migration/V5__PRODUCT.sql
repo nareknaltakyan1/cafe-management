@@ -1,0 +1,14 @@
+CREATE TABLE PRODUCT
+(
+    ID                     BIGINT AUTO_INCREMENT PRIMARY KEY,
+    NAME                   NVARCHAR(255) NOT NULL,
+    PRICE                  DECIMAL       NOT NULL,
+    CREATION_DATE           DATETIME      NOT NULL,
+    CREATED_BY             NVARCHAR(255) NOT NULL,
+    LAST_MODIFICATION_DATE DATETIME      NOT NULL,
+    LAST_MODIFIED_BY       NVARCHAR(255) NOT NULL,
+
+    INDEX (NAME),
+    INDEX (PRICE)
+)
+    engine = InnoDB;
