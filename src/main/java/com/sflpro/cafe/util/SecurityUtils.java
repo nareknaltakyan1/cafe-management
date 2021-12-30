@@ -41,9 +41,4 @@ public final class SecurityUtils
 				}
 		return null;
 	}
-
-	private static Stream<String> getAuthorities(Authentication authentication)
-	{
-		return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority);
-	}
 }
