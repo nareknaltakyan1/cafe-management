@@ -1,7 +1,6 @@
 package com.sflpro.cafe.service.aws;
 
 import com.amazonaws.HttpMethod;
-import com.amazonaws.services.s3.model.PutObjectResult;
 import com.sflpro.cafe.config.CloudStorageConfig;
 import com.sflpro.cafe.dto.FileMetadataDTO;
 import com.sflpro.cafe.exception.AppIllegalStateException;
@@ -93,8 +92,8 @@ public class AwsStorageService implements StorageService
 		metadata.put("originalName", file.getName());
 		try
 		{
-			PutObjectResult result = awsGateway.uploadFile(cloudStorageConfig.getStorage().getBucketName(), key, FileUtil.getFileContentType(file),
-				file.getInputStream(), metadata, personal);
+			awsGateway.uploadFile(cloudStorageConfig.getStorage().getBucketName(), key, FileUtil.getFileContentType(file), file.getInputStream(),
+				metadata, personal);
 		}
 		catch (IOException e)
 		{

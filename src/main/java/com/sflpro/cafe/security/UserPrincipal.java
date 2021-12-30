@@ -18,6 +18,7 @@ import java.util.Collections;
 @EqualsAndHashCode
 public class UserPrincipal implements UserDetails
 {
+	private static final long serialVersionUID = 1L;
 
 	Long id;
 	String username;

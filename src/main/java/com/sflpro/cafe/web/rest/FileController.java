@@ -43,7 +43,7 @@ public class FileController
 	{
 		Resource resource = fileFacade.loadFile(guid);
 
-		String contentType = getContentType(resource, request);
+		getContentType(resource, request);
 
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/pdf"))
 			.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
