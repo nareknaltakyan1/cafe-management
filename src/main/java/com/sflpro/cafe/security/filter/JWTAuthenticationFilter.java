@@ -14,28 +14,30 @@ import javax.servlet.ServletResponse;
 import java.io.IOException;
 
 @Component
-public class JWTAuthenticationFilter extends GenericFilterBean {
+public class JWTAuthenticationFilter extends GenericFilterBean
+{
 
-    private final JWTAuthenticationService jwtAuthenticationService;
+	private final JWTAuthenticationService jwtAuthenticationService;
 
-    public JWTAuthenticationFilter(JWTAuthenticationService jwtAuthenticationService) {
-        this.jwtAuthenticationService = jwtAuthenticationService;
-    }
+	public JWTAuthenticationFilter(JWTAuthenticationService jwtAuthenticationService)
+	{
+		this.jwtAuthenticationService = jwtAuthenticationService;
+	}
 
-    @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain filterChain) throws IOException, ServletException {
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException
+	{
 
-        String authToken = CookieUtil.getValue(request, JWTAuthenticationService.TOKEN_NAME);
+		String authToken = CookieUtil.getValue(request, JWTAuthenticationService.TOKEN_NAME);
 
-        if (authToken != null) {
-            Authentication authentication = jwtAuthenticationService.parseAuthHeader(authToken);
+		if (authToken != null)
+		{
+			Authentication authentication = jwtAuthenticationService.parseAuthHeader(authToken);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		}
 
-        filterChain.doFilter(request, response);
-    }
+		filterChain.doFilter(request, response);
+	}
 
 }

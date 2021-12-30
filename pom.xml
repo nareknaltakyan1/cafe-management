@@ -14,13 +14,22 @@
 	<name>cafe-management</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>1.8</java.version>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<java.version>11</java.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<auth0.jwt.version>3.16.0</auth0.jwt.version>
+		<auth0.jwt.version>3.18.2</auth0.jwt.version>
 		<swagger.version>2.9.2</swagger.version>
 		<spring.boot.version>2.5.0</spring.boot.version>
+		<jacoco.version>0.8.5</jacoco.version>
+		<spotless.version>1.31.3</spotless.version>
+		<spotbugs.version>4.0.4</spotbugs.version>
+		<maven-site.version>3.7.1</maven-site.version>
+		<maven-project-info.version>3.0.0</maven-project-info.version>
+		<apt-maven.version>1.1.3</apt-maven.version>
+		<lombok.version>1.18.22</lombok.version>
+		<springdoc-maven.version>1.0</springdoc-maven.version>
+		<defaultPort>8080</defaultPort>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -43,11 +52,9 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -125,6 +132,133 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<layers>
+						<enabled>true</enabled>
+						<configuration>${project.basedir}/src/layers/layers.xml</configuration>
+					</layers>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>build-info</goal>
+						</goals>
+						<configuration>
+							<additionalProperties>
+								<encoding.source>UTF-8</encoding.source>
+								<encoding.reporting>UTF-8</encoding.reporting>
+								<java.source>${maven.compiler.source}</java.source>
+								<java.target>${maven.compiler.target}</java.target>
+							</additionalProperties>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/AlgoliaEmailContentTranslationProvider.class</exclude>
+						<exclude>**/*Config.class</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${spotless.version}</version>
+				<configuration>
+					<java>
+						<removeUnusedImports/>
+						<eclipse>
+							<file>${basedir}/eclipse-format.xml</file>
+							<version>4.7.1</version>
+						</eclipse>
+					</java>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>${spotbugs.version}</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Low</threshold>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>${maven-site.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>${maven-project-info.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<configuration>
+					<offline>true</offline>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>apt-maven-plugin</artifactId>
+				<version>${apt-maven.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/generated-sources</outputDirectory>
+							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-maven-plugin</artifactId>
+				<version>${springdoc-maven.version}</version>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<apiDocsUrl>http://localhost:${defaultPort}/v3/api-docs</apiDocsUrl>
+					<outputFileName>openapi.json</outputFileName>
+					<outputDir>${project.build.directory}</outputDir>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

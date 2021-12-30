@@ -15,16 +15,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @javax.persistence.Table(name = "APP_ORDER")
-public class Order extends BaseEntity {
+public class Order extends BaseEntity
+{
 
-    @Column(name = "STATUS")
-    @Enumerated(EnumType.ORDINAL)
-    private OrderStatus status;
+	@Column(name = "STATUS")
+	@Enumerated(EnumType.ORDINAL)
+	private OrderStatus status;
 
-    @ManyToOne
-    @JoinColumn(name = "TABLE_ID")
-    private Table table;
+	@ManyToOne
+	@JoinColumn(name = "TABLE_ID")
+	private Table table;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ProductInOrder> productsInOrder;
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+	List<ProductInOrder> productsInOrder;
 }

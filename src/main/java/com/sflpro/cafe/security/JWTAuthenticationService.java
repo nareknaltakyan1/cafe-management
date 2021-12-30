@@ -18,104 +18,91 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class JWTAuthenticationService {
+public class JWTAuthenticationService
+{
 
-    public static final String TOKEN_NAME = "jwt-auth-token";
+	public static final String TOKEN_NAME = "jwt-auth-token";
 
-    private static final String SECRET = "gTTjxjlqsSO1WxF5PZMcaZQbAfOvEl3g";
-    private static final String ID = "id";
-    private static final String SUBJECT = "sub";
-    private static final String ENABLED = "enabled";
-    private static final String AUTHORITIES = "authorities";
-    private final com.sflpro.cafe.security.JwtProperties jwtProperties;
+	private static final String SECRET = "gTTjxjlqsSO1WxF5PZMcaZQbAfOvEl3g";
+	private static final String ID = "id";
+	private static final String SUBJECT = "sub";
+	private static final String ENABLED = "enabled";
+	private static final String AUTHORITIES = "authorities";
+	private final com.sflpro.cafe.security.JwtProperties jwtProperties;
 
-    public JWTAuthenticationService(JwtProperties jwtProperties) {
-        this.jwtProperties = jwtProperties;
-    }
+	public JWTAuthenticationService(JwtProperties jwtProperties)
+	{
+		this.jwtProperties = jwtProperties;
+	}
 
-    public String generateAuthHeader(Authentication auth) {
+	public String generateAuthHeader(Authentication auth)
+	{
 
-        final String[] authorities = auth.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toArray(String[]::new);
+		final String[] authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toArray(String[]::new);
 
-        UserPrincipal principal = (UserPrincipal) auth.getPrincipal();
+		UserPrincipal principal = (UserPrincipal) auth.getPrincipal();
 
-        return JWT.create()
-                .withClaim(ID, principal.getId())
-                .withClaim(SUBJECT, principal.getUsername())
-                .withClaim(ENABLED, principal.isEnabled())
-                .withArrayClaim(AUTHORITIES, authorities)
-                .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpirationTime()))
-                .sign(Algorithm.HMAC256(SECRET));
-    }
+		return JWT.create().withClaim(ID, principal.getId()).withClaim(SUBJECT, principal.getUsername()).withClaim(ENABLED, principal.isEnabled())
+			.withArrayClaim(AUTHORITIES, authorities).withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpirationTime()))
+			.sign(Algorithm.HMAC256(SECRET));
+	}
 
-    public Authentication parseAuthHeader(String authToken) {
+	public Authentication parseAuthHeader(String authToken)
+	{
 
-        if (authToken == null) {
-            return null;
-        }
+		if (authToken == null)
+		{
+			return null;
+		}
 
-        UserPrincipal userPrincipal = extractUserPrincipal(authToken);
+		UserPrincipal userPrincipal = extractUserPrincipal(authToken);
 
-        List<SimpleGrantedAuthority> authorities = extractAuthorities(authToken);
+		List<SimpleGrantedAuthority> authorities = extractAuthorities(authToken);
 
-        return new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
-    }
+		return new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
+	}
 
+	public static UserPrincipal extractUserPrincipal(String authToken)
+	{
 
-    public static UserPrincipal extractUserPrincipal(String authToken) {
+		DecodedJWT decodedJWT = JWTAuthenticationService.decodeJwt(authToken);
+		Map<String, Claim> claims = decodedJWT.getClaims();
 
-        DecodedJWT decodedJWT = JWTAuthenticationService.decodeJwt(authToken);
-        Map<String, Claim> claims = decodedJWT.getClaims();
+		String username = claims.get(JWTAuthenticationService.SUBJECT).asString();
+		Boolean enabled = claims.get(JWTAuthenticationService.ENABLED).asBoolean();
+		Long id = claims.get(ID).asLong();
 
-        String username = claims.get(JWTAuthenticationService.SUBJECT).asString();
-        Boolean enabled = claims.get(JWTAuthenticationService.ENABLED).asBoolean();
-        Long id = claims.get(ID).asLong();
+		List<SimpleGrantedAuthority> authorities = extractAuthorities(authToken);
 
-        List<SimpleGrantedAuthority> authorities = extractAuthorities(authToken);
+		Role role = authorities.stream().map(GrantedAuthority::getAuthority).map(s -> s.replace("ROLE_", "")).map(Role::valueOf).findFirst()
+			.orElseThrow(IllegalArgumentException::new);
 
-        Role role = authorities
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(s -> s.replace("ROLE_", ""))
-                .map(Role::valueOf)
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+		return UserPrincipal.builder().id(id).username(username).role(role).enabled(enabled).build();
+	}
 
+	public static List<SimpleGrantedAuthority> extractAuthorities(String authToken)
+	{
 
-        return UserPrincipal.builder()
-                .id(id)
-                .username(username)
-                .role(role)
-                .enabled(enabled)
-                .build();
-    }
+		DecodedJWT decodedJWT = JWTAuthenticationService.decodeJwt(authToken);
+		Map<String, Claim> claims = decodedJWT.getClaims();
 
-    public static List<SimpleGrantedAuthority> extractAuthorities(String authToken) {
+		@SuppressWarnings("unchecked")
+		final List<String> authoritiesClaim = claims.get(AUTHORITIES).asList(String.class);
 
-        DecodedJWT decodedJWT = JWTAuthenticationService.decodeJwt(authToken);
-        Map<String, Claim> claims = decodedJWT.getClaims();
+		return authoritiesClaim.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+	}
 
-        @SuppressWarnings("unchecked") final List<String> authoritiesClaim = claims.get(AUTHORITIES).asList(String.class);
+	public static DecodedJWT decodeJwt(String authToken)
+	{
 
-        return authoritiesClaim
-                .stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
+		JWTVerifier verifier = buildVerifier();
 
-    public static DecodedJWT decodeJwt(String authToken) {
+		return verifier.verify(authToken);
+	}
 
-        JWTVerifier verifier = buildVerifier();
+	public static JWTVerifier buildVerifier()
+	{
 
-        return verifier.verify(authToken);
-    }
-
-    public static JWTVerifier buildVerifier() {
-
-        return JWT.require(Algorithm.HMAC256(SECRET))
-                .build();
-    }
+		return JWT.require(Algorithm.HMAC256(SECRET)).build();
+	}
 }

@@ -7,9 +7,10 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface ProductInOrderRepository extends CrudRepository<ProductInOrder, Long> {
+public interface ProductInOrderRepository extends CrudRepository<ProductInOrder, Long>
+{
 
-    Optional<ProductInOrder> findByOrderAndProduct(Order order, Product product);
+	Optional<ProductInOrder> findByOrderAndProduct(Order order, Product product);
 
-    Optional<ProductInOrder> findByOrderIdAndProductId(Long orderId, Long productId);
+	Optional<ProductInOrder> findByOrderIdAndProductId(Long orderId, Long productId);
 }

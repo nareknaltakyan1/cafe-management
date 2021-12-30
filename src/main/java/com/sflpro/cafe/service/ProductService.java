@@ -13,42 +13,44 @@ import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
-public class ProductService {
+public class ProductService
+{
 
-    private final ProductRepository productRepository;
+	private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+	public ProductService(ProductRepository productRepository)
+	{
+		this.productRepository = productRepository;
+	}
 
-    @Transactional
-    public ProductDTO createProduct(ProductDTO productDTO) {
+	@Transactional
+	public ProductDTO createProduct(ProductDTO productDTO)
+	{
 
-        Product entity = new Product();
+		Product entity = new Product();
 
-        entity.setName(productDTO.getName());
-        entity.setPrice(productDTO.getPrice());
+		entity.setName(productDTO.getName());
+		entity.setPrice(productDTO.getPrice());
 
-        productRepository.save(entity);
+		productRepository.save(entity);
 
-        return productDtoFromEntity(entity);
-    }
+		return productDtoFromEntity(entity);
+	}
 
-    public List<ProductDTO> getAllProducts() {
+	public List<ProductDTO> getAllProducts()
+	{
 
-        return StreamSupport
-                .stream(productRepository.findAll().spliterator(), false)
-                .map(this::productDtoFromEntity)
-                .collect(Collectors.toList());
-    }
+		return StreamSupport.stream(productRepository.findAll().spliterator(), false).map(this::productDtoFromEntity).collect(Collectors.toList());
+	}
 
-    private ProductDTO productDtoFromEntity(Product entity) {
-        ProductDTO productDTO = new ProductDTO();
+	private ProductDTO productDtoFromEntity(Product entity)
+	{
+		ProductDTO productDTO = new ProductDTO();
 
-        productDTO.setId(entity.getId());
-        productDTO.setName(entity.getName());
-        productDTO.setPrice(entity.getPrice());
+		productDTO.setId(entity.getId());
+		productDTO.setName(entity.getName());
+		productDTO.setPrice(entity.getPrice());
 
-        return productDTO;
-    }
+		return productDTO;
+	}
 }

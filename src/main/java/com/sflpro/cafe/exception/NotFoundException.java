@@ -1,17 +1,20 @@
 package com.sflpro.cafe.exception;
 
-public class NotFoundException extends RuntimeException {
+public class NotFoundException extends RuntimeException
+{
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private String resource;
+	private String resource;
 
-    public NotFoundException(Object resource) {
-        super("Resource not found");
-        this.resource = String.valueOf(resource);
-    }
+	public NotFoundException(Object resource)
+	{
+		super("Resource not found");
+		this.resource = String.valueOf(resource);
+	}
 
-    public String getResource() {
-        return resource;
-    }
+	public String getResource()
+	{
+		return resource;
+	}
 }

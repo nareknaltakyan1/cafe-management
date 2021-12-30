@@ -20,93 +20,96 @@ import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService
+{
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder)
+	{
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
-    public UserDTO userRegistration(RegistrationDTO registrationDTO) {
+	public UserDTO userRegistration(RegistrationDTO registrationDTO)
+	{
 
-        Optional<User> existingUserOpt = userRepository.findByUsernameIgnoreCase(registrationDTO.getUsername());
+		Optional<User> existingUserOpt = userRepository.findByUsernameIgnoreCase(registrationDTO.getUsername());
 
-        if (existingUserOpt.isPresent()) {
-            log.error("Username already exists");
-            throw new UsernameAlreadyExistException();
-        }
+		if (existingUserOpt.isPresent())
+		{
+			log.error("Username already exists");
+			throw new UsernameAlreadyExistException();
+		}
 
-        User user = userRepository.save(constructNewUserEntity(registrationDTO));
+		User user = userRepository.save(constructNewUserEntity(registrationDTO));
 
-        return userEntityToDto(user);
-    }
+		return userEntityToDto(user);
+	}
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+	{
 
-        Optional<User> userOpt = userRepository.findByUsernameIgnoreCase(username);
+		Optional<User> userOpt = userRepository.findByUsernameIgnoreCase(username);
 
-        if (!userOpt.isPresent()) {
-            final String errorMsg = "User with such username doesn't exist";
-            log.error(errorMsg);
-            throw new UsernameNotFoundException(errorMsg);
-        }
+		if (!userOpt.isPresent())
+		{
+			final String errorMsg = "User with such username doesn't exist";
+			log.error(errorMsg);
+			throw new UsernameNotFoundException(errorMsg);
+		}
 
-        return constructUserPrincipal(userOpt.get());
-    }
+		return constructUserPrincipal(userOpt.get());
+	}
 
-    public List<UserDTO> getAllUsers() {
+	public List<UserDTO> getAllUsers()
+	{
 
-        return StreamSupport.stream(userRepository.findAll().spliterator(), false)
-                .map(UserService::userEntityToDto)
-                .collect(Collectors.toList());
-    }
+		return StreamSupport.stream(userRepository.findAll().spliterator(), false).map(UserService::userEntityToDto).collect(Collectors.toList());
+	}
 
-    public static UserDTO userEntityToDto(User user) {
+	public static UserDTO userEntityToDto(User user)
+	{
 
-        if (user == null) {
-            return null;
-        }
+		if (user == null)
+		{
+			return null;
+		}
 
-        UserDTO userDTO = new UserDTO();
+		UserDTO userDTO = new UserDTO();
 
-        userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setRole(user.getRole());
-        userDTO.setEnabled(user.isEnabled());
+		userDTO.setId(user.getId());
+		userDTO.setUsername(user.getUsername());
+		userDTO.setRole(user.getRole());
+		userDTO.setEnabled(user.isEnabled());
 
-        return userDTO;
-    }
+		return userDTO;
+	}
 
+	private User constructNewUserEntity(RegistrationDTO payload)
+	{
 
-    private User constructNewUserEntity(RegistrationDTO payload) {
+		User user = new User();
 
-        User user = new User();
+		user.setUsername(payload.getUsername());
+		user.setRole(payload.getRole());
 
-        user.setUsername(payload.getUsername());
-        user.setRole(payload.getRole());
+		user.setEnabled(true);
 
-        user.setEnabled(true);
+		String encodedPassword = passwordEncoder.encode(payload.getPassword());
 
-        String encodedPassword = passwordEncoder.encode(payload.getPassword());
+		user.setPassword(encodedPassword);
 
-        user.setPassword(encodedPassword);
+		return user;
+	}
 
-        return user;
-    }
+	private UserPrincipal constructUserPrincipal(User user)
+	{
 
-    private UserPrincipal constructUserPrincipal(User user) {
-
-        return UserPrincipal.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .encodedPassword(user.getPassword())
-                .role(user.getRole())
-                .enabled(user.isEnabled())
-                .build();
-    }
+		return UserPrincipal.builder().id(user.getId()).username(user.getUsername()).encodedPassword(user.getPassword()).role(user.getRole())
+			.enabled(user.isEnabled()).build();
+	}
 }

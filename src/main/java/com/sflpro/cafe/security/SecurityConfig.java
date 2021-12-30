@@ -24,61 +24,61 @@ import java.util.Collections;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties(JwtProperties.class)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter
+{
 
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final JWTAuthenticationFilter jwtAuthenticationFilter;
-    private final JWTAuthenticationService jwtAuthenticationService;
+	private final UserService userService;
+	private final PasswordEncoder passwordEncoder;
+	private final JWTAuthenticationFilter jwtAuthenticationFilter;
+	private final JWTAuthenticationService jwtAuthenticationService;
 
-    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder, JWTAuthenticationFilter jwtAuthenticationFilter,
-                          JWTAuthenticationService jwtAuthenticationService) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.jwtAuthenticationService = jwtAuthenticationService;
-    }
+	public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder, JWTAuthenticationFilter jwtAuthenticationFilter,
+		JWTAuthenticationService jwtAuthenticationService)
+	{
+		this.userService = userService;
+		this.passwordEncoder = passwordEncoder;
+		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+		this.jwtAuthenticationService = jwtAuthenticationService;
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.NEVER)
-                .and().cors()
-                .and().csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/register/**", "/swagger-resources/**", "/swagger-ui.html/**", "/v2/api-docs", "/webjars/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .deleteCookies(JWTAuthenticationService.TOKEN_NAME)
-                .logoutSuccessHandler(((request, response, authentication) -> { /* Just override default to do nothing */ }))
-                .and()
-                .addFilterBefore(new JWTLoginFilter("/authenticate", authenticationManager(), jwtAuthenticationService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception
+	{
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).and().cors().and().csrf().disable().authorizeRequests()
+			.antMatchers("/register/**", "/swagger-resources/**", "/swagger-ui.html/**", "/v2/api-docs", "/webjars/**").permitAll().anyRequest()
+			.authenticated().and().logout().logoutUrl("/logout").deleteCookies(JWTAuthenticationService.TOKEN_NAME)
+			.logoutSuccessHandler(((request, response, authentication) ->
+			{
+				/* Just override default to do nothing */ }))
+			.and().addFilterBefore(new JWTLoginFilter("/authenticate", authenticationManager(), jwtAuthenticationService),
+				UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+	}
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authProvider());
-    }
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth)
+	{
+		auth.authenticationProvider(authProvider());
+	}
 
-    public static CorsConfigurationSource corsConfigurationSource() {
-        final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("*"));
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("Cache-Control", "Content-Type"));
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+	public static CorsConfigurationSource corsConfigurationSource()
+	{
+		final CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Collections.singletonList("*"));
+		configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+		configuration.setAllowCredentials(true);
+		configuration.setAllowedHeaders(Arrays.asList("Cache-Control", "Content-Type"));
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
 
-    @Bean
-    public DaoAuthenticationProvider authProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-        return authProvider;
-    }
+	@Bean
+	public DaoAuthenticationProvider authProvider()
+	{
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userService);
+		authProvider.setPasswordEncoder(passwordEncoder);
+		return authProvider;
+	}
 }

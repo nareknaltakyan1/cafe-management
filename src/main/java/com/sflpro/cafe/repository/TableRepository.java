@@ -6,7 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface TableRepository extends CrudRepository<Table, Long> {
+public interface TableRepository extends CrudRepository<Table, Long>
+{
 
-    List<Table> findByWaiter(User waiter);
+	List<Table> findByWaiter(User waiter);
 }

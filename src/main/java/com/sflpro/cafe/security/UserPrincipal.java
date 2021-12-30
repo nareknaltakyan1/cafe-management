@@ -16,47 +16,55 @@ import java.util.Collections;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails
+{
+	private static final long serialVersionUID = 1L;
 
-    Long id;
-    String username;
-    String encodedPassword;
-    Role role;
-    boolean enabled;
+	Long id;
+	String username;
+	String encodedPassword;
+	Role role;
+	boolean enabled;
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities()
+	{
+		return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role));
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role));
-    }
+	@Override
+	public String getPassword()
+	{
+		return encodedPassword;
+	}
 
-    @Override
-    public String getPassword() {
-        return encodedPassword;
-    }
+	@Override
+	public String getUsername()
+	{
+		return username;
+	}
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
+	@Override
+	public boolean isAccountNonExpired()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonLocked()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+	@Override
+	public boolean isCredentialsNonExpired()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+	@Override
+	public boolean isEnabled()
+	{
+		return enabled;
+	}
 }

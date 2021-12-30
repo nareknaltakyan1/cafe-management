@@ -70,7 +70,7 @@ jobs:
         image: postgres:12
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: aVeryHardPasswordToGuess
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: postgres
         ports:
           - 5432:5432
@@ -84,7 +84,7 @@ jobs:
           sudo apt-get install postgresql-12
           psql postgresql://postgres@localhost/postgres < .docker/setup-postgres.sql
         env:
-          PGPASSWORD: aVeryHardPasswordToGuess
+          PGPASSWORD: postgres
       - name: Cache Maven dependencies
         uses: actions/cache@v2
         env:

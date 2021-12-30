@@ -13,25 +13,29 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/user")
 @PreAuthorize("hasRole('ROLE_MANAGER')")
-public class UserController {
+public class UserController
+{
 
-    private final UserService userService;
+	private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+	public UserController(UserService userService)
+	{
+		this.userService = userService;
+	}
 
-    @PostMapping(value = "/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO registrationDTO) {
+	@PostMapping(value = "/register")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO registrationDTO)
+	{
 
-        UserDTO userDTO = userService.userRegistration(registrationDTO);
-        return ResponseEntity.ok(userDTO);
-    }
+		UserDTO userDTO = userService.userRegistration(registrationDTO);
+		return ResponseEntity.ok(userDTO);
+	}
 
-    @GetMapping
-    public ResponseEntity<?> getAllUsers() {
+	@GetMapping
+	public ResponseEntity<?> getAllUsers()
+	{
 
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
+		return ResponseEntity.ok(userService.getAllUsers());
+	}
 }
