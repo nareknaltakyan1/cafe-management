@@ -10,13 +10,14 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public final class LoginDTO {
+public final class LoginDTO
+{
 
-    @NotEmpty
-    @Size(min = 6, max = 50)
-    private String username;
+	@NotEmpty
+	@Size(min = 6, max = 50)
+	private String username;
 
-    @NotEmpty
-    @Size(min = 8, max = 50)
-    private String password;
+	@NotEmpty
+	@Size(min = 8, max = 50)
+	private String password;
 }

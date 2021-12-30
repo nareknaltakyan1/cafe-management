@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserDTO
+{
 
-    private Long id;
-    private String username;
-    private Role role;
-    private boolean enabled;
+	private Long id;
+	private String username;
+	private Role role;
+	private boolean enabled;
 }

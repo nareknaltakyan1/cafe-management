@@ -5,55 +5,67 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "cloud")
-public class CloudStorageConfig {
+public class CloudStorageConfig
+{
 
-    private Storage storage;
+	private Storage storage;
 
-    public Storage getStorage() {
-        return storage;
-    }
+	public Storage getStorage()
+	{
+		return storage;
+	}
 
-    public void setStorage(Storage storage) {
-        this.storage = storage;
-    }
+	public void setStorage(Storage storage)
+	{
+		this.storage = storage;
+	}
 
-    public static class Storage {
+	public static class Storage
+	{
 
-        private String region;
-        private String appKey;
-        private String secret;
-        private String bucketName;
+		private String region;
+		private String appKey;
+		private String secret;
+		private String bucketName;
 
-        public String getRegion() {
-            return region;
-        }
+		public String getRegion()
+		{
+			return region;
+		}
 
-        public void setRegion(String region) {
-            this.region = region;
-        }
+		public void setRegion(String region)
+		{
+			this.region = region;
+		}
 
-        public String getAppKey() {
-            return appKey;
-        }
+		public String getAppKey()
+		{
+			return appKey;
+		}
 
-        public void setAppKey(String appKey) {
-            this.appKey = appKey;
-        }
+		public void setAppKey(String appKey)
+		{
+			this.appKey = appKey;
+		}
 
-        public String getSecret() {
-            return secret;
-        }
+		public String getSecret()
+		{
+			return secret;
+		}
 
-        public void setSecret(String secret) {
-            this.secret = secret;
-        }
+		public void setSecret(String secret)
+		{
+			this.secret = secret;
+		}
 
-        public String getBucketName() {
-            return bucketName;
-        }
+		public String getBucketName()
+		{
+			return bucketName;
+		}
 
-        public void setBucketName(String bucketName) {
-            this.bucketName = bucketName;
-        }
-    }
+		public void setBucketName(String bucketName)
+		{
+			this.bucketName = bucketName;
+		}
+	}
 }

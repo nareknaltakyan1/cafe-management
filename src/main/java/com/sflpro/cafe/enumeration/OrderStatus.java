@@ -1,8 +1,7 @@
 package com.sflpro.cafe.enumeration;
 
-public enum OrderStatus {
+public enum OrderStatus
+{
 
-    OPEN,
-    CANCELED,
-    CLOSED
+	OPEN, CANCELED, CLOSED
 }

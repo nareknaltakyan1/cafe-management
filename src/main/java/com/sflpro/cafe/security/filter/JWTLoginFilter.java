@@ -16,30 +16,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
+public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter
+{
 
-    private final JWTAuthenticationService jwtAuthenticationService;
+	private final JWTAuthenticationService jwtAuthenticationService;
 
-    public JWTLoginFilter(String url, AuthenticationManager authManager, JWTAuthenticationService jwtAuthenticationService) {
-        super(new AntPathRequestMatcher(url));
-        this.jwtAuthenticationService = jwtAuthenticationService;
-        this.setAuthenticationManager(authManager);
-    }
+	public JWTLoginFilter(String url, AuthenticationManager authManager, JWTAuthenticationService jwtAuthenticationService)
+	{
+		super(new AntPathRequestMatcher(url));
+		this.jwtAuthenticationService = jwtAuthenticationService;
+		this.setAuthenticationManager(authManager);
+	}
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse resp)
-            throws AuthenticationException, IOException {
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationException, IOException
+	{
 
-        LoginDTO loginDTO = new ObjectMapper().readValue(req.getInputStream(), LoginDTO.class);
+		LoginDTO loginDTO = new ObjectMapper().readValue(req.getInputStream(), LoginDTO.class);
 
-        return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(),
-                loginDTO.getPassword()));
-    }
+		return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
+	}
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse resp,
-                                            FilterChain chain, Authentication auth) {
-        String token = jwtAuthenticationService.generateAuthHeader(auth);
-        CookieUtil.setCookie(req, resp, JWTAuthenticationService.TOKEN_NAME, token);
-    }
+	@Override
+	protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse resp, FilterChain chain, Authentication auth)
+	{
+		String token = jwtAuthenticationService.generateAuthHeader(auth);
+		CookieUtil.setCookie(req, resp, JWTAuthenticationService.TOKEN_NAME, token);
+	}
 }

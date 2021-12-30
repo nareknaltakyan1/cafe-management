@@ -10,12 +10,13 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDTO {
+public class OrderDTO
+{
 
-    private Long id;
+	private Long id;
 
-    @NotNull
-    private OrderStatus status;
+	@NotNull
+	private OrderStatus status;
 
-    private TableDTO tableDTO;
+	private TableDTO tableDTO;
 }

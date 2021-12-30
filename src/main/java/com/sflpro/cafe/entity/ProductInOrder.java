@@ -14,20 +14,21 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @javax.persistence.Table(name = "PRODUCT_IN_ORDER")
-public class ProductInOrder extends BaseEntity {
+public class ProductInOrder extends BaseEntity
+{
 
-    @ManyToOne
-    @JoinColumn(name = "ORDER_ID")
-    private Order order;
+	@ManyToOne
+	@JoinColumn(name = "ORDER_ID")
+	private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID")
-    private Product product;
+	@ManyToOne
+	@JoinColumn(name = "PRODUCT_ID")
+	private Product product;
 
-    @Column(name = "QUANTITY")
-    private Integer quantity;
+	@Column(name = "QUANTITY")
+	private Integer quantity;
 
-    @Column(name = "STATUS")
-    @Enumerated(EnumType.ORDINAL)
-    private ProductInOrderStatus status;
+	@Column(name = "STATUS")
+	@Enumerated(EnumType.ORDINAL)
+	private ProductInOrderStatus status;
 }

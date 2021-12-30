@@ -1,10 +1,12 @@
 package com.sflpro.cafe.exception;
 
-public class AppIllegalStateException extends RuntimeException {
+public class AppIllegalStateException extends RuntimeException
+{
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public AppIllegalStateException(String message) {
-        super(message);
-    }
+	public AppIllegalStateException(String message)
+	{
+		super(message);
+	}
 }
