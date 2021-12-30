@@ -13,61 +13,70 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/order")
-public class OrderController {
+public class OrderController
+{
 
-    private final OrderService orderService;
+	private final OrderService orderService;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+	public OrderController(OrderService orderService)
+	{
+		this.orderService = orderService;
+	}
 
-    @PostMapping
-    @PreAuthorize("hasRole('ROLE_WAITER')")
-    public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
+	@PostMapping
+	@PreAuthorize("hasRole('ROLE_WAITER')")
+	public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDTO orderDTO)
+	{
 
-        return new ResponseEntity<>(orderService.createOrder(orderDTO), HttpStatus.CREATED);
-    }
+		return new ResponseEntity<>(orderService.createOrder(orderDTO), HttpStatus.CREATED);
+	}
 
-    @PutMapping(value = "/{orderId}")
-    @PreAuthorize("hasRole('ROLE_WAITER')")
-    public ResponseEntity<?> editOrder(@PathVariable Long orderId, @Valid @RequestBody OrderDTO orderDTO) {
+	@PutMapping(value = "/{orderId}")
+	@PreAuthorize("hasRole('ROLE_WAITER')")
+	public ResponseEntity<?> editOrder(@PathVariable Long orderId, @Valid @RequestBody OrderDTO orderDTO)
+	{
 
-        orderDTO.setId(orderId);
+		orderDTO.setId(orderId);
 
-        return new ResponseEntity<>(orderService.editOrder(orderDTO), HttpStatus.OK);
-    }
+		return new ResponseEntity<>(orderService.editOrder(orderDTO), HttpStatus.OK);
+	}
 
-    @PutMapping(value = "/{orderId}/product")
-    @PreAuthorize("hasRole('ROLE_WAITER')")
-    public ResponseEntity<?> addProductToOrder(@PathVariable Long orderId, @RequestBody ProductInOrderDTO productInOrderDTO) {
+	@PutMapping(value = "/{orderId}/product")
+	@PreAuthorize("hasRole('ROLE_WAITER')")
+	public ResponseEntity<?> addProductToOrder(@PathVariable Long orderId, @RequestBody ProductInOrderDTO productInOrderDTO)
+	{
 
-        productInOrderDTO.setOrderId(orderId);
+		productInOrderDTO.setOrderId(orderId);
 
-        return ResponseEntity.ok(orderService.addProductToOrder(productInOrderDTO));
-    }
+		return ResponseEntity.ok(orderService.addProductToOrder(productInOrderDTO));
+	}
 
-    @GetMapping(value = "/{orderId}/product/{productId}")
-    @PreAuthorize("hasRole('ROLE_WAITER')")
-    public ResponseEntity<?> getProductInOrder(@PathVariable Long orderId, @PathVariable Long productId) {
+	@GetMapping(value = "/{orderId}/product/{productId}")
+	@PreAuthorize("hasRole('ROLE_WAITER')")
+	public ResponseEntity<?> getProductInOrder(@PathVariable Long orderId, @PathVariable Long productId)
+	{
 
-        Optional<ProductInOrderDTO> productInOrderOpt = orderService.getProductInOrder(orderId, productId);
+		Optional<ProductInOrderDTO> productInOrderOpt = orderService.getProductInOrder(orderId, productId);
 
-        if (!productInOrderOpt.isPresent()) {
-            return ResponseEntity.noContent().build();
-        }
+		if (!productInOrderOpt.isPresent())
+		{
+			return ResponseEntity.noContent().build();
+		}
 
-        return ResponseEntity.ok(productInOrderOpt.get());
-    }
+		return ResponseEntity.ok(productInOrderOpt.get());
+	}
 
-    @PutMapping(value = "/{orderId}/product/{productId}")
-    @PreAuthorize("hasRole('ROLE_WAITER')")
-    public ResponseEntity<?> editProductInOrder(@PathVariable Long orderId, @PathVariable Long productId,  @RequestBody ProductInOrderDTO productInOrderDTO) {
+	@PutMapping(value = "/{orderId}/product/{productId}")
+	@PreAuthorize("hasRole('ROLE_WAITER')")
+	public ResponseEntity<?> editProductInOrder(@PathVariable Long orderId, @PathVariable Long productId,
+		@RequestBody ProductInOrderDTO productInOrderDTO)
+	{
 
-        productInOrderDTO.setOrderId(orderId);
-        productInOrderDTO.setProductId(productId);
+		productInOrderDTO.setOrderId(orderId);
+		productInOrderDTO.setProductId(productId);
 
-        ProductInOrderDTO result = orderService.editProductInOrder(productInOrderDTO);
+		ProductInOrderDTO result = orderService.editProductInOrder(productInOrderDTO);
 
-        return ResponseEntity.ok(result);
-    }
+		return ResponseEntity.ok(result);
+	}
 }

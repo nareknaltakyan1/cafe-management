@@ -9,12 +9,13 @@ import javax.validation.constraints.Positive;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TableDTO {
+public class TableDTO
+{
 
-    private Long id;
+	private Long id;
 
-    @Positive
-    private Integer chairsAmount;
+	@Positive
+	private Integer chairsAmount;
 
-    private UserDTO waiter;
+	private UserDTO waiter;
 }

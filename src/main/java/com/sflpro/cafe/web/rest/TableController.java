@@ -15,48 +15,55 @@ import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping(value = "/table")
-public class TableController {
+public class TableController
+{
 
-    private final TableService tableService;
+	private final TableService tableService;
 
-    public TableController(TableService tableService) {
-        this.tableService = tableService;
-    }
+	public TableController(TableService tableService)
+	{
+		this.tableService = tableService;
+	}
 
-    @PostMapping
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<?> createTable(@Valid @RequestBody TableDTO tableDTO) {
+	@PostMapping
+	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	public ResponseEntity<?> createTable(@Valid @RequestBody TableDTO tableDTO)
+	{
 
-        return new ResponseEntity<>(tableService.createTable(tableDTO), HttpStatus.CREATED);
-    }
+		return new ResponseEntity<>(tableService.createTable(tableDTO), HttpStatus.CREATED);
+	}
 
-    @GetMapping
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<?> getAllTables() {
+	@GetMapping
+	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	public ResponseEntity<?> getAllTables()
+	{
 
-        return ResponseEntity.ok(tableService.getAllTables());
-    }
+		return ResponseEntity.ok(tableService.getAllTables());
+	}
 
-    @GetMapping(value = "/{tableId}")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<?> getTable(@PathVariable Long tableId) {
+	@GetMapping(value = "/{tableId}")
+	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	public ResponseEntity<?> getTable(@PathVariable Long tableId)
+	{
 
-        return ResponseEntity.ok(tableService.getTable(tableId));
-    }
+		return ResponseEntity.ok(tableService.getTable(tableId));
+	}
 
-    @PutMapping("/{tableId}/assign")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<?> assignWaiter(@PathVariable @NotNull @Positive Long tableId, @RequestBody @NotNull @Positive Long waiterId) {
+	@PutMapping("/{tableId}/assign")
+	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	public ResponseEntity<?> assignWaiter(@PathVariable @NotNull @Positive Long tableId, @RequestBody @NotNull @Positive Long waiterId)
+	{
 
-        return ResponseEntity.ok(tableService.assignWaiter(tableId, waiterId));
-    }
+		return ResponseEntity.ok(tableService.assignWaiter(tableId, waiterId));
+	}
 
-    @GetMapping(value = "/assigned")
-    @PreAuthorize("hasRole('ROLE_WAITER')")
-    public ResponseEntity<?> getAssignedTables() {
+	@GetMapping(value = "/assigned")
+	@PreAuthorize("hasRole('ROLE_WAITER')")
+	public ResponseEntity<?> getAssignedTables()
+	{
 
-        Long currentUserId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+		Long currentUserId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 
-        return ResponseEntity.ok(tableService.getAssignedTables(currentUserId));
-    }
+		return ResponseEntity.ok(tableService.getAssignedTables(currentUserId));
+	}
 }

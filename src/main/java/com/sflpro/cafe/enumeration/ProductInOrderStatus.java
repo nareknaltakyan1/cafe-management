@@ -1,7 +1,7 @@
 package com.sflpro.cafe.enumeration;
 
-public enum ProductInOrderStatus {
+public enum ProductInOrderStatus
+{
 
-    ACTIVE,
-    CANCELED
+	ACTIVE, CANCELED
 }

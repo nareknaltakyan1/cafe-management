@@ -7,23 +7,29 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public final class CookieUtil {
+public final class CookieUtil
+{
 
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String name, String value) {
-        Cookie cookie = WebUtils.getCookie(request, name);
+	public static void setCookie(HttpServletRequest request, HttpServletResponse response, String name, String value)
+	{
+		Cookie cookie = WebUtils.getCookie(request, name);
 
-        if (cookie != null) {
-            cookie.setValue(value);
-        } else {
-            cookie = new Cookie(name, value);
-        }
+		if (cookie != null)
+		{
+			cookie.setValue(value);
+		}
+		else
+		{
+			cookie = new Cookie(name, value);
+		}
 
-        cookie.setPath("/");
-        response.addCookie(cookie);
-    }
+		cookie.setPath("/");
+		response.addCookie(cookie);
+	}
 
-    public static String getValue(ServletRequest servletRequest, String name) {
-        Cookie cookie = WebUtils.getCookie(((HttpServletRequest) servletRequest), name);
-        return cookie != null ? cookie.getValue() : null;
-    }
+	public static String getValue(ServletRequest servletRequest, String name)
+	{
+		Cookie cookie = WebUtils.getCookie(((HttpServletRequest) servletRequest), name);
+		return cookie != null ? cookie.getValue() : null;
+	}
 }

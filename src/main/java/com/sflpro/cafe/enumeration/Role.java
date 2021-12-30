@@ -1,7 +1,7 @@
 package com.sflpro.cafe.enumeration;
 
-public enum Role {
+public enum Role
+{
 
-    MANAGER,
-    WAITER
+	MANAGER, WAITER
 }

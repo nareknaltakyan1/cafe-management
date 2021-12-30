@@ -14,15 +14,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @javax.persistence.Table(name = "APP_TABLE")
-public class Table extends BaseEntity {
+public class Table extends BaseEntity
+{
 
-    @Column(name = "CHAIRS")
-    private Integer chairsAmount;
+	@Column(name = "CHAIRS")
+	private Integer chairsAmount;
 
-    @ManyToOne
-    @JoinColumn(name = "WAITER_ID")
-    private User waiter;
+	@ManyToOne
+	@JoinColumn(name = "WAITER_ID")
+	private User waiter;
 
-    @OneToMany(mappedBy = "table", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Order> orders;
+	@OneToMany(mappedBy = "table", fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<Order> orders;
 }

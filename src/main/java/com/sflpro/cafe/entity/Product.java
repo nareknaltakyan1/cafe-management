@@ -16,11 +16,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "PRODUCT")
-public class Product extends BaseEntity {
+public class Product extends BaseEntity
+{
 
-    @Column(name = "NAME", unique = true)
-    private String name;
+	@Column(name = "NAME", unique = true)
+	private String name;
 
-    @Column(name = "PRICE")
-    private BigDecimal price;
+	@Column(name = "PRICE")
+	private BigDecimal price;
 }

@@ -7,22 +7,23 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Data
-public class ProductInOrderDTO {
+public class ProductInOrderDTO
+{
 
-    private Long id;
+	private Long id;
 
-    @NotNull
-    @Positive
-    private Long orderId;
+	@NotNull
+	@Positive
+	private Long orderId;
 
-    @NotNull
-    @Positive
-    private Long productId;
+	@NotNull
+	@Positive
+	private Long productId;
 
-    @NotNull
-    @Positive
-    private Integer quantity;
+	@NotNull
+	@Positive
+	private Integer quantity;
 
-    @NotNull
-    private ProductInOrderStatus status;
+	@NotNull
+	private ProductInOrderStatus status;
 }

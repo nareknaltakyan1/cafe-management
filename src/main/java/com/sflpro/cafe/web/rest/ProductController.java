@@ -11,25 +11,29 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/product")
-public class ProductController {
+public class ProductController
+{
 
-    private final ProductService productService;
+	private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+	public ProductController(ProductService productService)
+	{
+		this.productService = productService;
+	}
 
-    @PostMapping
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+	@PostMapping
+	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDTO productDTO)
+	{
 
-        return new ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED);
-    }
+		return new ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED);
+	}
 
-    @GetMapping
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<?> getAllProducts() {
+	@GetMapping
+	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	public ResponseEntity<?> getAllProducts()
+	{
 
-        return ResponseEntity.ok(productService.getAllProducts());
-    }
+		return ResponseEntity.ok(productService.getAllProducts());
+	}
 }

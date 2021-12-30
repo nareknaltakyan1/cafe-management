@@ -8,9 +8,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaAuditing
 @SpringBootApplication
 @EnableTransactionManagement
-public class CafeManagementApplication {
+public class CafeManagementApplication
+{
 
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		SpringApplication.run(CafeManagementApplication.class, args);
 	}
 

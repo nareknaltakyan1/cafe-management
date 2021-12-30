@@ -11,13 +11,14 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
+public class ProductDTO
+{
 
-    private Long id;
+	private Long id;
 
-    @NotEmpty
-    private String name;
+	@NotEmpty
+	private String name;
 
-    @Positive
-    private BigDecimal price;
+	@Positive
+	private BigDecimal price;
 }
